@@ -74,7 +74,7 @@ export async function calculateCoinPrivKey(transport: Transport, coinsH: string[
         await transport.send(cmd.cla, cmd.GenCoinPrivateKey, 0x00, i, buf)
     }
     let buf = Buffer.from(coinsH[coinsH.length - 1], "base64")
-    await transport.send(cmd.cla, cmd.GenCoinPrivateKey, 0x01, coinsH.length - 1, buf)
+    return await transport.send(cmd.cla, cmd.GenCoinPrivateKey, 0x01, coinsH.length - 1, buf)
 }
 
 export async function signSchnorr(transport: Transport, pedRand: string, pedPriv: string, randomness: string, message: string) {
@@ -95,8 +95,7 @@ export async function signSchnorr(transport: Transport, pedRand: string, pedPriv
     msg.copy(buf, pRand.length + pPriv.length + rand.length, msg.length)
 
     try {
-        const res = await transport.send(cmd.cla, cmd.SignSchnorr, 0x00, 0x00, buf)
-        return res
+        return await transport.send(cmd.cla, cmd.SignSchnorr, 0x00, 0x00, buf)
     }
     catch (err) {
         console.error(err)
