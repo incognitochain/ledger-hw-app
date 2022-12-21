@@ -11,9 +11,11 @@ export const cmd = {
     // gen ring sig s set
     GenAlpha: 0x21,
     SetAlpha: 0x25,
+    GetAlpha: 0x26,
     CalculateC: 0x22,
     CalculateR: 0x23,
     GenCoinPrivateKey: 0x24,
+    DecryptCoin: 0x27,
     SignSchnorr: 0x40,
     TrustHost: 0x60,
     p1First: 0x00,

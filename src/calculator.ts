@@ -7,10 +7,15 @@ export async function genAlpha(transport: Transport, alphaLen: number) {
     return transport.send(cmd.cla, cmd.GenAlpha, alphaLen, 0x00, buf);
 }
 
-export async function setAlpha(transport: Transport, alphaLen: number, data: string[]) {
-    for (let i = 0; i < alphaLen; i ++) {
-        const buf = Buffer.from(data[i])
-        const res = await transport.send(cmd.cla, cmd.SetAlpha, i, 0x00, buf)
+export async function setAlpha(transport: Transport, index: number, data: string) {
+    const buf = Buffer.from(data, "base64")
+    return await transport.send(cmd.cla, cmd.SetAlpha, index, 0x00, buf)
+}
+
+export async function getAlpha(transport: Transport, alphaLen: number) {
+    const buf = Buffer.from([])
+    for (let i = 0; i < alphaLen; i++) {
+        const res = await transport.send(cmd.cla, cmd.GetAlpha, i, 0x00, buf)
         console.log(res)
     }
 }
@@ -24,7 +29,8 @@ export async function calculateKeyImage(transport: Transport, encryptKmB64: stri
     
     coinEncryptKm.copy(buffer, 0);
     coinPubKey.copy(buffer, 32);
-    return transport.send(cmd.cla, cmd.KeyImage, 0x00, 0x00, buffer);
+    const res = await transport.send(cmd.cla, cmd.KeyImage, 0x00, 0x00, buffer);
+    return res.subarray(0, 32);
 }
 
 
@@ -37,8 +43,7 @@ export async function calculateFirstC(transport: Transport, params: string[]) {
             const msg = await transport.send(cmd.cla, cmd.CalculateC, 0x00, i, h)
             result.push(msg.subarray(0, 64));
         }
-        let buf = Buffer.from(params[params.length - 1], "base64")
-        const msg = await transport.send(cmd.cla, cmd.CalculateC, 0x01, params.length - 1, buf)
+        const msg = await transport.send(cmd.cla, cmd.CalculateC, 0x01, params.length - 1, pedComG)
         result.push(msg.subarray(0, 32));
         return Buffer.concat(result);
     }
