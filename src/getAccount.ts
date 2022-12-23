@@ -3,8 +3,9 @@ import { cmd } from "./constants";
 
 export async function getAddress(transport: Transport) {
     let buf = Buffer.from([]);
-    const res = await transport.send(cmd.cla, cmd.GetAddress, 0x00, 0x00, buf);
-    return res.subarray(0, res.indexOf(0)).toString('ascii').trimEnd().replace(/[^0-9a-z]/gi, '');
+    let res = await transport.send(cmd.cla, cmd.GetAddress, 0x00, 0x00, buf);
+    const temp = String.fromCharCode.apply(null, res.subarray(0, res.indexOf(0)));
+    return temp.trimEnd().replace(/[^0-9a-z]/gi, '');
 }
 
 export async function getOTAKey(transport: Transport) {

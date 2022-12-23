@@ -16,7 +16,7 @@ export async function decryptCoin(transport: Transport, txConcealRndStr: string,
 
     const res = await transport.send(cmd.cla, cmd.DecryptCoin, 0x00, 0x00, buffer);
     return {
-        Amount: res.subarray(0, 32).toString('base64'),
-        Randomness: res.subarray(32, 64).toString('base64'),
+        Amount: String.fromCharCode.apply(null, res.subarray(0, 32)),
+        Randomness: String.fromCharCode.apply(null, res.subarray(32, 64)),
     }
 }
