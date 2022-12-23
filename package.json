@@ -11,7 +11,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/TBD/tbd.git"
+    "url": "https://github.com/incognitochain/ledger-hw-app.git"
   },
   "publishConfig": {
     "access": "public"
@@ -27,8 +27,7 @@
     "@ledgerhq/hw-transport-webhid": "^6",
     "@vespaiach/axios-fetch-adapter": "^0.3.1",
     "base58check": "^2.0.0",
-    "typescript": "^4.9.4"
-    "postinstall": "^0.8.0",
+    "typescript": "^4"
   },
   "scripts": {
     "clean": "rimraf lib lib-es",
@@ -39,15 +38,14 @@
     "lint": "eslint ./src --no-error-on-unmatched-pattern --ext .ts,.tsx",
     "lint:fix": "pnpm lint --fix",
     "test": "jest"
-    "postinstall": "tsc && tsc -m ES6 --outDir lib-es"
   },
   "devDependencies": {
     "@types/node": "^18.11.13"
   },
   "peerDependencies": {
-    "typescript": "^4",
     "@ledgerhq/hw-transport-http": "^6",
     "@ledgerhq/hw-transport-node-hid": "^6",
-    "@ledgerhq/hw-transport-webhid": "^6"
+    "@ledgerhq/hw-transport-webhid": "^6",
+    "typescript": "^4"
   }
 }
