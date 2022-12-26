@@ -1,6 +1,7 @@
 import Transport from "@ledgerhq/hw-transport";
 import { TransportError } from "@ledgerhq/errors";
 import axios from "axios";
+import adapter from "@vespaiach/axios-fetch-adapter";
 import { log } from "@ledgerhq/logs";
 /**
  * HTTP transport implementation
@@ -15,8 +16,6 @@ export default class HttpTransport extends Transport {
     unsubscribe: () => {},
   });
   static check = async (url: string, timeout = 5000) => {
-    let adapter;
-    if (globalThis.fetch) adapter = await import("@vespaiach/axios-fetch-adapter");
     const response = await axios({
       url,
       timeout,
@@ -49,8 +48,6 @@ export default class HttpTransport extends Transport {
   async exchange(apdu: Buffer): Promise<Buffer> {
     const apduHex = apdu.toString("hex");
     log("apdu", "=> " + apduHex);
-    let adapter;
-    if (globalThis.fetch) adapter = await import("@vespaiach/axios-fetch-adapter");
     const response = await axios({
       method: "POST",
       url: this.url,
