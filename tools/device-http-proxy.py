@@ -61,7 +61,7 @@ class SimpleHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         print('>', binascii.hexlify(result))
 
         # forward the APDU response to the client, embedded in response body
-        data = {'data': str(binascii.hexlify(result), 'ascii'), 'error': None}
+        data = {'data': str(binascii.hexlify(result), 'ascii') + '9000', 'error': None} # also append success status (0x9000)
         data = json.dumps(data)
         data = data.encode('ascii')
 
