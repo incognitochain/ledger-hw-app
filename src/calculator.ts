@@ -10,9 +10,13 @@ const arrayConcat = (arrays) => {
     return new Uint8Array(flatNumberArray);
 };
 
-export async function genAlpha(transport: Transport, alphaLen: number) {
+export async function genAlpha(transport: Transport, alphaLen: number, isToken: boolean) {
     let buf = Buffer.from([]);
-    return transport.send(cmd.cla, cmd.GenAlpha, alphaLen, 0x00, buf);
+    let p2 = 0;
+    if (isToken == true) {
+        p2 = 1;
+    }
+    return transport.send(cmd.cla, cmd.GenAlpha, alphaLen, p2, buf);
 }
 
 export async function setAlpha(transport: Transport, index: number, data: string) {
@@ -20,10 +24,14 @@ export async function setAlpha(transport: Transport, index: number, data: string
     return await transport.send(cmd.cla, cmd.SetAlpha, index, 0x00, buf)
 }
 
-export async function getAlpha(transport: Transport, alphaLen: number) {
+export async function getAlpha(transport: Transport, alphaLen: number, isToken: boolean) {
     const buf = Buffer.from([])
+    let p2 = 0
+    if (isToken == true) {
+        p2 =1
+    }
     for (let i = 0; i < alphaLen; i++) {
-        const res = await transport.send(cmd.cla, cmd.GetAlpha, i, 0x00, buf)
+        const res = await transport.send(cmd.cla, cmd.GetAlpha, i, p2, buf)
         console.log(res)
     }
 }
@@ -60,12 +68,17 @@ export async function calculateFirstC(transport: Transport, params: string[]) {
     }
 }
 
-export async function calculateR(transport: Transport, coinLen: number, cPi: string) {
+export async function calculateR(transport: Transport, coinLen: number, cPi: string, isToken: boolean) {
     const buf = Buffer.from(cPi, "base64")
     try {
         let result = [];
+        let p1 = 0;
+        if (isToken == true) {
+            p1 = 1
+        }
         for (let i = 0; i < coinLen; i++) {
-            const msg = await transport.send(cmd.cla, cmd.CalculateR, 0x00, i, buf)
+            console.log(p1, i)
+            const msg = await transport.send(cmd.cla, cmd.CalculateR, p1, i, buf)
             result.push(msg.subarray(0, 32));
         }
         return result;
