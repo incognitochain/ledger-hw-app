@@ -1,6 +1,14 @@
 import type Transport from "@ledgerhq/hw-transport";
 import { cmd } from "./constants";
 
+const arrayConcat = (arrays) => {
+    const flatNumberArray = arrays.reduce((acc: any[], curr: any) => {
+        acc.push(...curr);
+        return acc;
+    }, []);
+
+    return new Uint8Array(flatNumberArray);
+};
 
 export async function genAlpha(transport: Transport, alphaLen: number) {
     let buf = Buffer.from([]);
@@ -45,7 +53,7 @@ export async function calculateFirstC(transport: Transport, params: string[]) {
         }
         const msg = await transport.send(cmd.cla, cmd.CalculateC, 0x01, params.length - 1, pedComG)
         result.push(msg.subarray(0, 32));
-        return Buffer.concat(result);
+        return arrayConcat(result);
     }
     catch (err) {
         console.error(err)
