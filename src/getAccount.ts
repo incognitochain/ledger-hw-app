@@ -32,6 +32,6 @@ export async function switchKey(transport: Transport, accountNum: number) {
     buf[1] = (accountNum >> 16) & 0xFF;
     buf[2] = (accountNum >> 8) & 0xFF;
     buf[3] = accountNum & 0xFF;
-    console.log(buf);
-    return transport.send(cmd.cla, cmd.SwitchKey, 0x00, 0x00, buf);
+    const res = await transport.send(cmd.cla, cmd.SwitchKey, 0x00, 0x00, buf);
+    return res.subarray(0,100)
 }
