@@ -68,6 +68,27 @@ export async function calculateFirstC(transport: Transport, params: string[]) {
     }
 }
 
+export async function calculateFirstCCA(transport: Transport, params: string[]) {
+    const pedComG = Buffer.from(params[params.length - 1], "base64")
+    try {
+        let result = [];
+        for (let i = 0; i < params.length - 2; i++) {
+            const h = Buffer.from(params[i], "base64")
+            const msg = await transport.send(cmd.cla, cmd.CalculateCCA, 0x00, i, h)
+            result.push(msg.subarray(0, 64));
+        }
+        let msg = await transport.send(cmd.cla, cmd.CalculateCCA, 0x01, params.length - 2, pedComG)
+        result.push(msg.subarray(0, 32));
+
+        msg = await transport.send(cmd.cla, cmd.CalculateCCA, 0x01, params.length - 1, pedComG)
+        result.push(msg.subarray(0, 32));
+        return arrayConcat(result);
+    }
+    catch (err) {
+        console.error(err)
+    }
+}
+
 export async function calculateR(transport: Transport, coinLen: number, cPi: string, isToken: boolean) {
     const buf = Buffer.from(cPi, "base64")
     try {

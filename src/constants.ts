@@ -16,6 +16,7 @@ export const cmd = {
     CalculateR: 0x23,
     GenCoinPrivateKey: 0x24,
     DecryptCoin: 0x27,
+    CalculateCCA: 0x28,
     SignSchnorr: 0x40,
     TrustHost: 0x60,
     p1First: 0x00,
