@@ -26,10 +26,7 @@ export async function setAlpha(transport: Transport, index: number, data: string
 
 export async function getAlpha(transport: Transport, alphaLen: number, isToken: boolean) {
     const buf = Buffer.from([])
-    let p2 = 0
-    if (isToken == true) {
-        p2 =1
-    }
+    let p2 = isToken ? 1 : 0;
     for (let i = 0; i < alphaLen; i++) {
         const res = await transport.send(cmd.cla, cmd.GetAlpha, i, p2, buf)
         console.log(res)
@@ -50,7 +47,7 @@ export async function calculateKeyImage(transport: Transport, encryptKmB64: stri
 }
 
 
-export async function calculateFirstC(transport: Transport, params: string[]) {
+async function _calculateFirstC(transport: Transport, params: string[]) {
     const pedComG = Buffer.from(params[params.length - 1], "base64")
     try {
         let result = [];
@@ -68,7 +65,7 @@ export async function calculateFirstC(transport: Transport, params: string[]) {
     }
 }
 
-export async function calculateFirstCCA(transport: Transport, params: string[]) {
+async function _calculateFirstC_CA(transport: Transport, params: string[]) {
     const pedComG = Buffer.from(params[params.length - 1], "base64")
     try {
         let result = [];
@@ -89,16 +86,15 @@ export async function calculateFirstCCA(transport: Transport, params: string[]) 
     }
 }
 
+export const calculateFirstC = async (transport: Transport, params: string[], isToken: boolean) => 
+    isToken ? _calculateFirstC_CA(transport, params) : _calculateFirstC(transport, params);
+
 export async function calculateR(transport: Transport, coinLen: number, cPi: string, isToken: boolean) {
     const buf = Buffer.from(cPi, "base64")
     try {
         let result = [];
-        let p1 = 0;
-        if (isToken == true) {
-            p1 = 1
-        }
+        let p1 = isToken ? 1 : 0;
         for (let i = 0; i < coinLen; i++) {
-            console.log(p1, i)
             const msg = await transport.send(cmd.cla, cmd.CalculateR, p1, i, buf)
             result.push(msg.subarray(0, 32));
         }
@@ -109,14 +105,17 @@ export async function calculateR(transport: Transport, coinLen: number, cPi: str
     }
 }
 
-export async function calculateCoinPrivKey(transport: Transport, coinsH: string[]) {
-
-    for (let i = 0; i < coinsH.length - 1; i++) {
+export async function calculateCoinPrivKey(transport: Transport, coinsH: string[], inputLen: number) {
+    for (let i = 0; i < inputLen; i++) {
         let buf = Buffer.from(coinsH[i], "base64")
         await transport.send(cmd.cla, cmd.GenCoinPrivateKey, 0x00, i, buf)
     }
-    let buf = Buffer.from(coinsH[coinsH.length - 1], "base64")
-    return await transport.send(cmd.cla, cmd.GenCoinPrivateKey, 0x01, coinsH.length - 1, buf)
+    for (let i = inputLen; i < coinsH.length; i++) {
+        {
+            let buf = Buffer.from(coinsH[i], "base64")
+            await transport.send(cmd.cla, cmd.GenCoinPrivateKey, 0x01, i, buf)
+        }
+    }
 }
 
 export async function signSchnorr(transport: Transport, pedRand: string, pedPriv: string, randomness: string, message: string) {
