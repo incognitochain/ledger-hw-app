@@ -115,3 +115,19 @@ export function switchKey(transport, accountNum) {
         });
     });
 }
+export function getListAddresses(transport, startIndex) {
+    return __awaiter(this, void 0, void 0, function () {
+        var buf, res;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    buf = Buffer.from([]);
+                    return [4 /*yield*/, transport.send(cmd.cla, cmd.GetListAddress, startIndex, 0x00, buf)];
+                case 1:
+                    res = _a.sent();
+                    console.log(res);
+                    return [2 /*return*/, res.subarray(0, 300)];
+            }
+        });
+    });
+}

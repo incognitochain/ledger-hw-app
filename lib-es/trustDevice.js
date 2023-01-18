@@ -35,12 +35,36 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import { cmd } from "./constants";
+import bn from "bn.js";
 export function trustDevice(transport) {
     return __awaiter(this, void 0, void 0, function () {
         var buf;
         return __generator(this, function (_a) {
             buf = Buffer.from([]);
             return [2 /*return*/, transport.send(cmd.cla, cmd.TrustHost, 0x00, 0x00, buf)];
+        });
+    });
+}
+export function confirmTx(transport, amount, decimal, address) {
+    return __awaiter(this, void 0, void 0, function () {
+        var bnAmt, onesbyte, bufAmount, bufAddress, arr, buf;
+        return __generator(this, function (_a) {
+            bnAmt = new bn(amount);
+            onesbyte = new bn(0xFF);
+            bufAmount = Buffer.alloc(8);
+            bufAmount[0] = bnAmt.shrn(56).and(onesbyte);
+            bufAmount[1] = bnAmt.shrn(48).and(onesbyte);
+            bufAmount[2] = bnAmt.shrn(40).and(onesbyte);
+            bufAmount[3] = bnAmt.shrn(32).and(onesbyte);
+            bufAmount[4] = bnAmt.shrn(24).and(onesbyte);
+            bufAmount[5] = bnAmt.shrn(16).and(onesbyte);
+            bufAmount[6] = bnAmt.shrn(8).and(onesbyte);
+            bufAmount[7] = bnAmt.and(onesbyte);
+            bufAddress = Buffer.from(address, "hex");
+            console.log('buffer is', bufAmount);
+            arr = [bufAmount, bufAddress];
+            buf = Buffer.concat(arr);
+            return [2 /*return*/, transport.send(cmd.cla, cmd.ConfirmTx, 0x00, decimal, buf)];
         });
     });
 }

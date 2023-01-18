@@ -6,6 +6,7 @@ export var cmd = {
     SwitchKey: 0x05,
     GetOTAKey: 0x06,
     GetValidatorKey: 0x07,
+    GetListAddress: 0x08,
     KeyImage: 0x10,
     // gen ring sig s set
     GenAlpha: 0x21,
@@ -18,6 +19,7 @@ export var cmd = {
     CalculateCCA: 0x28,
     SignSchnorr: 0x40,
     TrustHost: 0x60,
+    ConfirmTx: 0x61,
     p1First: 0x00,
     p1More: 0x80,
     p2DisplayAddress: 0x00,
