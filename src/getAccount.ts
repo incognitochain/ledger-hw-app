@@ -35,3 +35,10 @@ export async function switchKey(transport: Transport, accountNum: number) {
     const res = await transport.send(cmd.cla, cmd.SwitchKey, 0x00, 0x00, buf);
     return res.subarray(0,100)
 }
+
+export async function getListAddresses(transport: Transport, startIndex: number) {
+    let buf = Buffer.from([]);
+    const res = await  transport.send(cmd.cla, cmd.GetListAddress, startIndex, 0x00, buf);
+    console.log(res)
+    return res.subarray(0,300);
+}

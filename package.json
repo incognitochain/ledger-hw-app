@@ -40,7 +40,8 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@types/node": "^18.11.13"
+    "@types/node": "^18.11.13",
+    "bn.js": "^5.2.1"
   },
   "peerDependencies": {
     "@ledgerhq/hw-transport-http": "^6",
