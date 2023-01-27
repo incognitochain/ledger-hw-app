@@ -1,6 +1,6 @@
 import type Transport from "@ledgerhq/hw-transport";
 import { cmd } from "./constants";
-import bn from "bn.js";
+const bn = require("bn.js");
 
 export  async  function trustDevice(transport: Transport) {
     let buf = Buffer.from([]);
@@ -21,9 +21,8 @@ export async function confirmTx(transport: Transport, amount: string, decimal: n
     bufAmount[6] = bnAmt.shrn(8).and(onesbyte);
     bufAmount[7] = bnAmt.and(onesbyte);
 
-    let bufAddress = Buffer.from(address, "hex")
-    console.log('buffer is', bufAmount);
-    let arr = [bufAmount, bufAddress]
-    let buf = Buffer.concat(arr)
-    return transport.send(cmd.cla, cmd.ConfirmTx, 0x00, decimal, buf)
+    let bufAddress = Buffer.from(address, "base64");
+    let arr = [bufAmount, bufAddress];
+    let buf = Buffer.concat(arr);
+    return transport.send(cmd.cla, cmd.ConfirmTx, 0x00, decimal, buf);
 }
