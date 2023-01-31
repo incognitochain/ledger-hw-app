@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import { cmd } from "./constants";
-import bn from "bn.js";
+var bn = require("bn.js");
 export function trustDevice(transport) {
     return __awaiter(this, void 0, void 0, function () {
         var buf;
@@ -60,8 +60,7 @@ export function confirmTx(transport, amount, decimal, address) {
             bufAmount[5] = bnAmt.shrn(16).and(onesbyte);
             bufAmount[6] = bnAmt.shrn(8).and(onesbyte);
             bufAmount[7] = bnAmt.and(onesbyte);
-            bufAddress = Buffer.from(address, "hex");
-            console.log('buffer is', bufAmount);
+            bufAddress = Buffer.from(address, "base64");
             arr = [bufAmount, bufAddress];
             buf = Buffer.concat(arr);
             return [2 /*return*/, transport.send(cmd.cla, cmd.ConfirmTx, 0x00, decimal, buf)];

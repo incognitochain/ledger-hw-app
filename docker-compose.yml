@@ -10,4 +10,4 @@ services:
       - "5005:5005" # api
       - "40000:40000" # apdu
       - "41000:41000" # vnc
-    command: "--model nanos ./apps/incognito.elf --sdk 1.6 --seed secret --display headless --apdu-port 40000 --vnc-port 41000"
+    command: "--model nanos ./apps/incognito.elf --sdk 2.1 --seed secret --display headless --apdu-port 40000 --vnc-port 41000"
